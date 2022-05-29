@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+        * {
+            font-family: 'Open Sans', sans-serif;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.js"
+        integrity="sha512-vRqhAr2wsn+/cSsyz80psBbCcqzz2GTuhGk3bq3dAyytz4J/8XwFqMjiAGFBj+WM95lHBJ9cDf87T3P8yMrY7A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body class="bg-gray-200">
+    <div class='flex items-center justify-center min-h-screen'>
+        <div
+            class="bg-white border border-slate-300 w-max h-20 shadow-lg rounded-md gap-4 p-4 flex flex-row items-center justify-center">
+            <section class="w-6 h-full flex flex-col items-center justify-start">
+                <svg width="100%" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M7.5 13.25C10.9518 13.25 13.75 10.4518 13.75 7C13.75 3.54822 10.9518 0.75 7.5 0.75C4.04822 0.75 1.25 3.54822 1.25 7C1.25 10.4518 4.04822 13.25 7.5 13.25Z"
+                        stroke="#21ce8f" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                        d="M4.3269 7.96143C4.80767 9.69219 6.73075 10.7499 8.46152 10.2691C9.51921 9.8845 10.3846 9.01912 10.6731 7.96143"
+                        stroke="#21ce8f" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                        d="M10.0481 5.55767C9.91536 5.55767 9.80774 5.45005 9.80774 5.31729C9.80774 5.18453 9.91536 5.0769 10.0481 5.0769"
+                        stroke="#21ce8f" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                        d="M10.0481 5.5577C10.1809 5.5577 10.2885 5.45008 10.2885 5.31732C10.2885 5.18456 10.1809 5.07693 10.0481 5.07693"
+                        stroke="#21ce8f" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                        d="M4.95193 5.55767C4.81917 5.55767 4.71155 5.45005 4.71155 5.31729C4.71155 5.18453 4.81917 5.0769 4.95193 5.0769"
+                        stroke="#21ce8f" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                        d="M4.95197 5.5577C5.08473 5.5577 5.19235 5.45008 5.19235 5.31732C5.19235 5.18456 5.08473 5.07693 4.95197 5.07693"
+                        stroke="#21ce8f" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </section>
+            <section class="h-full flex flex-col items-start justify-end gap-1">
+                <h1 class="text-base font-semibold text-zinc-800 antialiased" id="result"></h1>
+                <p class="text-sm font-medium text-zinc-400 antialiased">is the Estimated price of your car</p>
+            </section>
+        </div>
+    </div>
+
+
+    <!-- heading -->
+
+    <!-- This example requires Tailwind CSS v2.0+ -->
+    <div class=" mx-5 lg:flex lg:items-center lg:justify-between">
+        <div class="flex-1 min-w-0">
+            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Some Car Recommendations For
+                You</h2>
+        </div>
+    </div>
+
+
+    <!-- card design -->
+
+    <div id="resultcard">
+    </div>
+
+</body>
+<script src="./js/result.js"></script>
+<script>
+    var params = new URLSearchParams(window.location.search),
+        first = params.get("first");
+
+    console.log(first)
+
+    document.getElementById("result").innerHTML = "Rs. " + first;
+
+    fetch("static/csvjson.json").then(function (resp) {
+        return resp.json();
+    })
+        .then(function (data) {
+
+            array = [];
+
+            for (i = 0; i < data.length; i++) {
+
+                let moddata = data[i].Ex_Showroom_Price.replace("Rs. ", "");
+
+                let moddataaftercomma = moddata.replace(",", "");
+
+                let moddataaftersecondcomma = moddataaftercomma.replace(/,/g, '');
+
+
+                let intmoddata = parseInt(moddataaftersecondcomma);
+
+                if (intmoddata < first) {
+                    console.log(moddataaftersecondcomma)
+                    console.log(intmoddata)
+                    array.push(i);
+                }
+            }
+
+            console.log(array)
+
+            let uivariable = "";
+
+
+            for (i = 0; i < array.length; i++) {
+
+                uivariable += '<div class="mt-5 relative flex flex-col md:flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 max-w-xs md:max-w-3xl mx-auto border border-white bg-white"><div class="w-full md:bg-white flex flex-col space-y-2 p-3"><div class="flex justify-between item-center"><p class="text-gray-500 font-medium hidden md:block">' + data[array[i]].Displacement + '</p><div class="flex items-center"><p class="text-gray-600 font-bold text-sm ml-1">' + data[array[i]].City_Mileage + '<span class="text-gray-500 font-normal">(Km /Litre)</span></p></div><div class=""></div><div class="bg-gray-200 px-3 py-1 rounded-full text-xs font-medium text-gray-800 hidden md:block">' + data[array[i]].Kerb_Weight + '</div></div><h3 class="font-black text-gray-800 md:text-3xl text-xl"> ' + data[array[i]].Make + " " + data[array[i]].Model + " " + data[array[i]].Variant + '</h3><p class="text-xl font-black text-gray-800">' + data[array[i]].Ex_Showroom_Price + '</p></div></div>';
+
+
+            }
+
+            // console.log(uivariable)
+
+            document.getElementById('resultcard').innerHTML = uivariable;
+
+
+        });
+</script>
+
+</html>

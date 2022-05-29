@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/app.js"></script>
+    <script>
+        let result;
+
+        function onClickedEstimatePrice() {
+            console.log("Estimate price button clicked");
+            var engine_location = document.getElementById("uilocation");
+            var tankcapacity = document.getElementById("tankcapacity");
+            var fuel_type = document.getElementById("fuel_type");
+            var Height = document.getElementById("Height");
+            var Length = document.getElementById("Length");
+            var width = document.getElementById("width");
+            var city_milage = document.getElementById("city_milage");
+            var Gears = document.getElementById("Gears");
+            var odometer = document.getElementById("odometer");
+            var speedometer = document.getElementById("speedometer");
+            var seats_material = document.getElementById("seats_material");
+            var seating_capacity = document.getElementById("seating_capacity");
+            var audiosystem = document.getElementById("audiosystem");
+            var airbags = document.getElementById("airbags");
+
+            var url = "http://127.0.0.1:5000/predict"; //Use this if you are NOT using nginx which is first 7 tutorials
+            // var url = "/api/predict"; // Use this if  you are using nginx. i.e tutorial 8 and onwards
+
+            $.post(url, {
+
+                // total_sqft: parseFloat(sqft.value),
+
+                engine_location: engine_location.value,
+                odometer: odometer.value,
+                speedometer: speedometer.value,
+                seats_material: seats_material.value,
+                audiosystem: audiosystem.value,
+                fuel_type: fuel_type.value,
+                Fuel_Tank_Capacity: parseFloat(tankcapacity.value),
+                Height: parseFloat(Height.value),
+                Length: parseFloat(Length.value),
+                Width: parseFloat(width.value),
+                City_Mileage: parseFloat(city_milage.value),
+                Gears: parseFloat(Gears.value),
+                Seating_Capacity: parseFloat(seating_capacity.value),
+                Number_of_Airbags: parseFloat(airbags.value)
+
+            }, function (data, status) {
+
+                console.log(data.estimated_price)
+
+                result = data.estimated_price.toString();
+                var params = new URLSearchParams();
+                params.append("first", result);
+
+                var url = "results?" + params.toString();
+                location.href = url;
+
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function enginelocation() {
+            var url = "http://127.0.0.1:5000/engine_locations"; // Use this if you are NOT using nginx which is first 7 tutorials
+            // var url = "/api/get_location_names"; // Use this if  you are using nginx. i.e tutorial 8 and onwards
+            $.get(url, function (data, status) {
+                console.log("got response for engine_locations request");
+                if (data) {
+                    var locations = data.engine_locations;
+                    var uiLocations = document.getElementById("uilocation");
+                    $('#uilocation').empty();
+                    for (var i in locations) {
+                        var opt = new Option(locations[i]);
+                        $('#uilocation').append(opt);
+                    }
+                }
+            });
+            var url1 = "http://127.0.0.1:5000/fuel_type";
+            $.get(url1, function (data, status) {
+                if (data) {
+                    var locations = data.fuel_type;
+                    var uiLocations = document.getElementById("fuel_type");
+                    $('#fuel_type').empty();
+                    for (var i in locations) {
+                        var opt = new Option(locations[i]);
+                        $('#fuel_type').append(opt);
+                    }
+                }
+            });
+            var url2 = "http://127.0.0.1:5000/odometer";
+            $.get(url2, function (data, status) {
+                if (data) {
+                    var locations = data.odometer;
+                    var uiLocations = document.getElementById("odometer");
+                    $('#odometer').empty();
+                    for (var i in locations) {
+                        var opt = new Option(locations[i]);
+                        $('#odometer').append(opt);
+                    }
+                }
+            });
+            var url3 = "http://127.0.0.1:5000/speedometer";
+            $.get(url3, function (data, status) {
+                if (data) {
+                    var locations = data.speedometer;
+                    var uiLocations = document.getElementById("speedometer");
+                    $('#speedometer').empty();
+                    for (var i in locations) {
+                        var opt = new Option(locations[i]);
+                        $('#speedometer').append(opt);
+                    }
+                }
+            });
+            var url4 = "http://127.0.0.1:5000/seats_material";
+            $.get(url4, function (data, status) {
+                if (data) {
+                    var locations = data.seats_material;
+                    var uiLocations = document.getElementById("seats_material");
+                    $('#seats_material').empty();
+                    for (var i in locations) {
+                        var opt = new Option(locations[i]);
+                        $('#seats_material').append(opt);
+                    }
+                }
+            });
+            var url5 = "http://127.0.0.1:5000/audiosystem";
+            $.get(url5, function (data, status) {
+                if (data) {
+                    var locations = data.audiosystem;
+                    var uiLocations = document.getElementById("audiosystem");
+                    $('#audiosystem').empty();
+                    for (var i in locations) {
+                        var opt = new Option(locations[i]);
+                        $('#audiosystem').append(opt);
+                    }
+                }
+            });
+        }
+
+
+        window.onload = enginelocation;
+
+
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+        section {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10%;
+        }
+
+        .selectColor {
+            position: relative;
+            padding: 10px;
+            border: none;
+            border-right: 10px solid #fff;
+            outline: none;
+            width: 200px;
+            border-radius: 4px;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <form>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FyJTIwZW5naW5lfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Engine Location</div>
+                    <div>
+                        <section>
+                            <select class="selectColor" id="uilocation">
+                            </select>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://images.unsplash.com/photo-1644246905181-c3753e9a82bd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8Y2FyJTIwdGFuayUyMGZ1ZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Fuel Tank Capacity</div>
+                    <div>
+                        <section>
+                            <input type="text"
+                                class="border-gray-500 border-1 text-center rounded-md p-2 my-4 shadow-lg"
+                                id="tankcapacity">
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://images.unsplash.com/photo-1602853175733-5ad62dc6a2c8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Y2FyJTIwdGFuayUyMGZ1ZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Fuel Type</div>
+                    <div>
+                        <section>
+                            <select class="selectColor" id="fuel_type">
+                            </select>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://images.unsplash.com/photo-1550985543-49bee3167284?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cnVsZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Height</div>
+                    <div>
+                        <section>
+                            <input type="text"
+                                class="border-gray-500 border-1 text-center rounded-md p-2 my-4 shadow-lg" id="Height">
+                            </select>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://images.unsplash.com/photo-1611077544775-6e72542a206f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cnVsZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Length</div>
+                    <div>
+                        <section>
+                            <input type="text"
+                                class="border-gray-500 border-1 text-center rounded-md p-2 my-4 shadow-lg" id="Length">
+
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://images.unsplash.com/photo-1502043150060-b01aa3030556?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8cnVsZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Width</div>
+                    <div>
+                        <section>
+                            <input type="text"
+                                class="border-gray-500 border-1 text-center rounded-md p-2 my-4 shadow-lg" id="width">
+
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://images.unsplash.com/photo-1490902931801-d6f80ca94fe4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8Y2FyJTIwbWlsYWdlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">City Milage</div>
+                    <div>
+                        <section>
+                            <input type="text"
+                                class="border-gray-500 border-1 text-center rounded-md p-2 my-4 shadow-lg"
+                                id="city_milage">
+
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://media.istockphoto.com/photos/businessman-driving-to-work-picture-id906197584?b=1&k=20&m=906197584&s=170667a&w=0&h=5SPNcCkRRR84OtvqkTrpmsxVWs4-QxSJWfh3WDGqNsw="
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Gears</div>
+                    <div>
+                        <section>
+                            <input type="number"
+                                class="border-gray-500 border-1 text-center rounded-md p-2 my-4 shadow-lg" id="Gears">
+
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://media.istockphoto.com/photos/odometer-picture-id183304580?b=1&k=20&m=183304580&s=170667a&w=0&h=Xi7A4TVh4Gw-8Km3bBrRuvyyKwzPOlmNOWjS3uEM8VY="
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Odometer</div>
+                    <div>
+                        <section>
+                            <select class="selectColor" id="odometer">
+                            </select>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://images.unsplash.com/photo-1498887960847-2a5e46312788?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FyJTIwbWlsYWdlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Speedometer</div>
+                    <div>
+                        <section>
+                            <select class="selectColor" id="speedometer">
+                            </select>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://images.unsplash.com/photo-1543520670-88499859302c?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Y2FyJTIwc2VhdHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500"
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Seating Material</div>
+                    <div>
+                        <section>
+                            <select class="selectColor" id="seats_material">
+                            </select>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://images.unsplash.com/photo-1602794351477-4b0a974fd386?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8Y2FyJTIwc2VhdHN8ZW58MHx8MHx8&auto=format&fit=crop&w=500"
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Seating Capacity</div>
+                    <div>
+                        <section>
+                            <input type="number"
+                                class="border-gray-500 border-1 text-center rounded-md p-2 my-4 shadow-lg"
+                                id="seating_capacity">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://images.unsplash.com/photo-1432462770865-65b70566d673?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fGNhciUyMGF1ZGlvc3lzdGVtfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Audiosystem</div>
+                    <div>
+                        <section>
+                            <select class="selectColor" id="audiosystem">
+                            </select>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid place-items-center h-screen">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <img class="w-full"
+                    src="https://media.istockphoto.com/photos/crash-tesh-dummy-in-car-picture-id1209793467?b=1&k=20&m=1209793467&s=170667a&w=0&h=0aacX0EoFndZv-w-j5BQN9iV48o3mZzfgpbsjWQ4iLo="
+                    alt="Sunset in the mountains">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2 pt-3">Airbags</div>
+                    <div>
+                        <section>
+                            <input type="number"
+                                class="border-gray-500 border-1 text-center rounded-md p-2 my-4 shadow-lg" id="airbags">
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- submit button -->
+
+
+        <div class="md:h-40 py-20 md:py-0 flex justify-center items-center">
+            <div class="md:space-x-20 space-y-10 md:space-y-0">
+                <button class="py-3 px-6 text-white rounded-lg bg-green-400 shadow-lg block md:inline-block"
+                    onclick="onClickedEstimatePrice()">Predict Price</button>
+            </div>
+        </div>
+
+        <!-- submit buton ends here -->
+    </form>
+
+</body>
+
+</html>
